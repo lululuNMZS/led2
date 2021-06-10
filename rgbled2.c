@@ -10,16 +10,22 @@
 #define BCM2837_GPIO_SET0_OFFSET      0x1C  // GPIO置位寄存器0
 #define BCM2837_GPIO_CLR0_OFFSET      0x28  // GPIO清零寄存器0
 
+#define LED_RED_PIN 27
+#define LED_GREEN_PIN 17
+#define LED_BLUE_PIN 22
+
+
+
 // 三色LED灯不同状态组合
 static struct { const char* name; const bool pins[3]; } colors[] = {
-  { "white",  {1,1,1} },  // 白(全开)
-  { "black",  {0,0,0} },  // 黑(全关)
-  { "red",    {1,0,0} },  // 红
-  { "green",  {0,1,0} },  // 绿
-  { "blue",   {0,0,1} },  // 蓝
-  { "yellow", {1,1,0} },  // 黄
-  { "cyan",   {0,1,1} },  // 青
-  { "purple", {1,0,1} },  // 紫
+  { "white",  {1,1,1} },  // 白(全开) 0b111
+  { "black",  {0,0,0} },  // 黑(全关) 0b000
+  { "red",    {1,0,0} },  // 红	0b100
+  { "green",  {0,1,0} },  // 绿 0b010
+  { "blue",   {0,0,1} },  // 蓝 0b001
+  { "yellow", {1,1,0} },  // 黄 0b110
+  { "cyan",   {0,1,1} },  // 青 0b011
+  { "purple", {1,0,1} },  // 紫 0b101
 };
 
 
@@ -82,6 +88,39 @@ static int __init rgbled_init(void)
   return 0;
 }
 module_init(rgbled_init);
+
+void gpioctl(int pin){
+	int num;
+	switch(pin){
+		case LED_RED_PIN:
+			num=pin-pin;
+			break;
+		case LED_GREEN_PIN:
+			num=pin-pin+1;
+			break;
+		case LED_BLUE_PIN:
+			num=pin-pin+2;
+			break;
+		default:
+			printk("wrong pin num");
+
+	}
+	
+	BCM2837_GPIO_CLR0_OFFSET;
+	BCM2837_GPIO_SET0_OFFSET;
+	reg = gpio+BCM2837_GPIO_SET0_OFFSET;
+	iowrite32(1<<pin,reg);
+
+}
+
+
+static void rgbled_write(){
+		
+}
+
+void rgbled_read(){
+
+}
 
 static void __exit rgbled_exit(void)
 {
