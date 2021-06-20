@@ -45,6 +45,10 @@ void rgbled_read(void){
 
 
 void rgbled_ioctl(int pin){
+//	char pin_state = ~(~7) | pin;
+//	| 001
+//	| 010
+//	| 100
 	int reg = gpio+BCM2837_GPIO_SET0_OFFSET;
 	iowrite32(1<<pin,reg);
 
@@ -99,7 +103,10 @@ module_init(rgbled_init);
 static void __exit rgbled_exit(void)
 {
   // GPIO输出0
+  iowrite32(1 << 17, gpio + BCM2837_GPIO_CLR0_OFFSET);
   iowrite32(1 << 27, gpio + BCM2837_GPIO_CLR0_OFFSET);
+  iowrite32(1 << 22, gpio + BCM2837_GPIO_CLR0_OFFSET);
+  printk(KERN_INFO"Bye led2");
   iounmap(gpio);
 
 }
