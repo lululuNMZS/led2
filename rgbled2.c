@@ -16,7 +16,7 @@
 #define LED_BLUE_PIN 22
 
 
-static struct {
+static  struct  {
 	const char* name;
 	const char pin;
 }colors[]={
@@ -28,7 +28,8 @@ static struct {
   { "yellow", 6 },  // 黄 0b110
   { "cyan",   3 },  // 青 0b011
   { "purple", 5 },  // 紫 0b101
-};
+},led_state;
+
 
 static void* gpio = 0;
 static dev_t devno=0;
@@ -65,7 +66,8 @@ void rgbled_ioctl(char pin){
 	else
 		iowrite32(1<<LED_BLUE_PIN,reg_clr);
 
-
+	//led_state.name=
+	led_state.pin=pin;
 }
 
 
