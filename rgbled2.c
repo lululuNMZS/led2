@@ -20,14 +20,14 @@ static struct {
 	const char* name;
 	const char pin;
 }colors[]={
-  { "white",  '7' },  // 白(全开) 0b111
-  { "black",  '0' },  // 黑(全关) 0b000
-  { "red",    '4' },  // 红	0b100
-  { "green",  '2' },  // 绿 0b010
-  { "blue",   '1' },  // 蓝 0b001
-  { "yellow", '6' },  // 黄 0b110
-  { "cyan",   '3' },  // 青 0b011
-  { "purple", '5' },  // 紫 0b101
+  { "white",  7 },  // 白(全开) 0b111
+  { "black",  0 },  // 黑(全关) 0b000
+  { "red",    4 },  // 红	0b100
+  { "green",  2 },  // 绿 0b010
+  { "blue",   1 },  // 蓝 0b001
+  { "yellow", 6 },  // 黄 0b110
+  { "cyan",   3 },  // 青 0b011
+  { "purple", 5 },  // 紫 0b101
 };
 
 static void* gpio = 0;
@@ -44,13 +44,27 @@ void rgbled_read(void){
 }
 
 
-void rgbled_ioctl(int pin){
-//	char pin_state = ~(~7) | pin;
-//	| 001
-//	| 010
-//	| 100
-	int reg = gpio+BCM2837_GPIO_SET0_OFFSET;
-	iowrite32(1<<pin,reg);
+void rgbled_ioctl(char pin){
+	char r_pin,g_pin,b_pin;
+	r_pin= pin & (~(~4));
+	g_pin= pin & (~(~2));
+	b_pin= pin & (~(~1));
+
+	int reg_set = gpio+BCM2837_GPIO_SET0_OFFSET;
+	int reg_clr = gpio+BCM2837_GPIO_CLR0_OFFSET;
+	if (r_pin != 0)
+		iowrite32(1<<LED_RED_PIN,reg_set);
+	else
+		iowrite32(1<<LED_RED_PIN,reg_clr);
+	if (g_pin != 0)
+		iowrite32(1<<LED_GREEN_PIN,reg_set);
+	else
+		iowrite32(1<<LED_GREEN_PIN,reg_clr);
+	if (b_pin != 0)
+		iowrite32(1<<LED_BLUE_PIN,reg_set);
+	else
+		iowrite32(1<<LED_BLUE_PIN,reg_clr);
+
 
 }
 
@@ -93,7 +107,7 @@ static int __init rgbled_init(void)
   cdev_init(&cdev,&fops);
   cdev_add(&cdev,devno,1);
 
-  rgbled_ioctl(LED_RED_PIN);
+  rgbled_ioctl(colors[5].pin);
 
   return 0;
 }
