@@ -70,6 +70,8 @@ static void rgbled_write(struct file* filp, const char __user* buf,\
 	int rc=0;
 	char name[32] = {0};
 	rc = copy_from_user(name, buf, len);
+	printk(KERN_INFO"user buff: %s",name);
+	printk(KERN_INFO"RC return is: %d",rc);
 	if (rc < 0)
 		return rc;
 
@@ -79,6 +81,7 @@ static void rgbled_write(struct file* filp, const char __user* buf,\
 	int i;
 	for(i=0;i<(sizeof(colors))/sizeof(colors[0]);i++)
 		if(!strcmp(name,colors[i].name)) {
+			printk(KERN_INFO"test1");
 			rgbled_ioctl(colors[i].pin);	
 			led_state_name=name;	
 		}
