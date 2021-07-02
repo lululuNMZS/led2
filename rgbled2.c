@@ -1,6 +1,7 @@
 #include <linux/init.h>
 #include <linux/module.h>
 #include <asm/io.h>
+#include <linux/uaccess.h>
 #include <linux/delay.h>
 #include <linux/cdev.h>
 
@@ -61,9 +62,20 @@ void rgbled_ioctl(char pin){
 		iowrite32(1<<LED_BLUE_PIN,reg_clr);
 
 	led_state_pin=pin;
+	printk(KERN_INFO"led_state_pin:%d %d %d",r_pin,g_pin,b_pin);
 }
 
-static void rgbled_write(char* name){
+static void rgbled_write(struct file* filp, const char __user* buf,\
+		size_t len, loff_t* off) {
+	int rc=0;
+	char name[32] = {0};
+	rc = copy_from_user(name, buf, len);
+	if (rc < 0)
+		return rc;
+
+	*off = 0;
+
+
 	int i;
 	for(i=0;i<(sizeof(colors))/sizeof(colors[0]);i++)
 		if(!strcmp(name,colors[i].name)) {
@@ -115,7 +127,13 @@ static int __init rgbled_init(void)
   cdev_init(&cdev,&fops);
   cdev_add(&cdev,devno,1);
 
-  rgbled_ioctl(colors[5].pin);
+
+
+
+
+  printk(KERN_INFO"rgbled device major & minor is [%d:%d]\n", MAJOR(devno), MINOR(devno));
+
+//  rgbled_ioctl(colors[5].pin);
 
   return 0;
 }
