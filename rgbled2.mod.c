@@ -30,7 +30,8 @@ __attribute__((section("__versions"))) = {
 	{ 0x79c5a9f0, __VMLINUX_SYMBOL_STR(ioremap) },
 	{ 0xfa2a45e, __VMLINUX_SYMBOL_STR(__memzero) },
 	{ 0x1e047854, __VMLINUX_SYMBOL_STR(warn_slowpath_fmt) },
-	{ 0xe2d5255a, __VMLINUX_SYMBOL_STR(strcmp) },
+	{ 0x84b183ae, __VMLINUX_SYMBOL_STR(strncmp) },
+	{ 0x97255bdf, __VMLINUX_SYMBOL_STR(strlen) },
 	{ 0x28cc25db, __VMLINUX_SYMBOL_STR(arm_copy_from_user) },
 	{ 0x27e1a049, __VMLINUX_SYMBOL_STR(printk) },
 	{ 0x2e5810c6, __VMLINUX_SYMBOL_STR(__aeabi_unwind_cpp_pr1) },
@@ -43,4 +44,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "828B2C578395AA79A461B6B");
+MODULE_INFO(srcversion, "D031AE6FB496ED8543027A2");
