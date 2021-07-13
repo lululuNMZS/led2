@@ -10,7 +10,9 @@ TEST := rgbled2_test
 TEST_SRC := $(TEST).c
 TEST_OBJ := $(TEST).o
 
-all:
+all: module test
+
+module:
 	make -C $(KDIR) M=$(PWD) modules ARCH=arm CROSS_COMPILE=/home/lxl/raspi/RpiTools/tools-master/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin/arm-linux-gnueabihf-
  
 test:

@@ -18,18 +18,18 @@ int main(int argc, char* argv[])
   }
 
   switch (argv[1][0]) {
-  case 'r':
-  case 'R':
-    ioctl(fd, 2, atoi(argv[2]));
-    break;
-  case 'g':
-  case 'G':
-    ioctl(fd, 3, atoi(argv[2]));
-    break;
-  case 'b':
-  case 'B':
-    ioctl(fd, 4, atoi(argv[2]));
-    break;
+  	case 'r':
+  	case 'R':
+    		ioctl(fd, 2, atoi(argv[2]));
+    		break;
+  	case 'g':
+  	case 'G':
+    		ioctl(fd, 3, atoi(argv[2]));
+    		break;
+  	case 'b':
+ 	case 'B':
+    		ioctl(fd, 4, atoi(argv[2]));
+    		break;
   }
   
   close(fd);

@@ -40,7 +40,8 @@ static dev_t devno=0;
 static struct cdev cdev;
 
 
-void rgbled_ioctl(char pin){
+void gpioctl(char pin)
+{
 	char r_pin,g_pin,b_pin;
 	r_pin= pin & (~(~4));
 	g_pin= pin & (~(~2));
@@ -65,8 +66,23 @@ void rgbled_ioctl(char pin){
 	printk(KERN_INFO"led_state_pin:%d %d %d",r_pin,g_pin,b_pin);
 }
 
+void rgbled_ioctl(struct file* filp, unsigned int cmd, unsigned long arg)
+{
+	if (cmd >=2 && cmd <=4){
+		printk(KERN_INFO"test2");
+		gpioctl(colors[cmd].pin);
+	}
+	else{
+		return -ENODEV;
+	}
+
+	return 0;
+		
+}
+
 static void rgbled_write(struct file* filp, const char __user* buf,\
-		size_t len, loff_t* off) {
+		size_t len, loff_t* off) 
+{
 	int rc=0;
 	char name[32] = {0};
 
@@ -84,8 +100,9 @@ static void rgbled_write(struct file* filp, const char __user* buf,\
 	for(i=0;i<sizeof(colors)/sizeof(colors[0]);i++){
 		if(!strncmp(name,colors[i].name,strlen(colors[i].name))) {
 			printk(KERN_INFO"test1");
-			rgbled_ioctl(colors[i].pin);	
+			gpioctl(colors[i].pin);	
 			led_state_name=name;	
+			return;
 		}
 	}
 
@@ -96,7 +113,8 @@ void rgbled_read(void){
 }
 
 
-static const struct file_operations fops = {
+static const struct file_operations fops = 
+{
 	.owner=THIS_MODULE,
 	.read=rgbled_read,
 	.write=rgbled_write,
